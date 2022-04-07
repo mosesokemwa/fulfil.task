@@ -9,3 +9,4 @@ class Config(object):
     DEBUG = os.environ.get('DEBUG') or False
     CELERY_BROKER_URL="redis://localhost:6379"
     CELERY_RESULT_BACKEND="redis://localhost:6379"
+    UPLOAD_FOLDER = os.path.join(basedir, 'app/upload/uploads')
