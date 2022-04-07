@@ -5,3 +5,4 @@ __pycache__
 .env
 .vscode
 .env.development
+postgres_data
