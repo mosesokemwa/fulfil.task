@@ -1,5 +1,5 @@
 from app import create_app
-from app.models import Product
+from models.models import Product
 
 app = create_app()
 

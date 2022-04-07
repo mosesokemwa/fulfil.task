@@ -1,9 +1,9 @@
 import io
-from celery_task import add, import_file_task
+from tasks.celery_task import add, import_file_task
 import unittest
-from config import Config
+from config.settings import Config
 from app import create_app
-from database import db_session, init_db
+from models.models import db_session, init_db
 from flask import url_for
 
 from models import Product

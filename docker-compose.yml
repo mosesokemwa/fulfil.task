@@ -22,18 +22,18 @@ services:
         POSTGRES_USER: yourUserDBName
         POSTGRES_PASSWORD: yourUserDBPassword
         POSTGRES_DB: yourDBName
-  # worker:
-  #   build:
-  #     context: .
-  #   hostname: worker
-  #   entrypoint: celery
-  #   command: -A app.celery_task worker -l INFO
-  #   volumes:
-  #     - ./:/app
-  #   links:
-  #     - redis
-  #   depends_on:
-  #     - redis
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A app.celery_task worker -l INFO
+    volumes:
+      - ./:/app
+    links:
+      - redis
+    depends_on:
+      - redis
 volumes:
   logvolume01: {}
   postgres_data: {}

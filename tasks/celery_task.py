@@ -1,14 +1,10 @@
-import app
-from flask_celery import make_celery
 import random
 import csv
-from app.database import db_session
-from app.models import Product
+from models import db_session
+from models.models import Product
+from tasks import celery
 
-
-celery = make_celery(app)
-
-@celery.task
+@celery.task()
 def add(x, y):
     return x + y
 
@@ -31,7 +27,10 @@ def import_file_task(self, file_path):
                 db_session.add(product)
                 db_session.commit()
                 index += 1
-                self.update_state(state='PROGRESS', meta={'current': index, 'total': total, 'status': 'OK'})
+                self.update_state(
+                    state="PROGRESS",
+                    meta={"current": index, "total": total, "status": "OK"},
+                )
             except Exception as e:
                 # update duplicate sku
                 print(f"Error {e}")
@@ -44,4 +43,4 @@ def import_file_task(self, file_path):
                 print(f"{row['sku']} updated")
             finally:
                 db_session.remove()
-    return len(list(reader))
+    # return len(list(reader))
