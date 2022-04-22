@@ -13,6 +13,8 @@ for atr in [f for f in dir(_current) if '__' not in f]:
    setattr(sys.modules[__name__], atr, val)
 
 
+# current env
+CURRENT_ENV = '{0}Config'.format(APP_ENV)
 def as_dict():
    res = {}
    for atr in [f for f in dir(settings) if '__' not in f]:

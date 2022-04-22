@@ -4,11 +4,15 @@ services:
     build: .
     ports:
       - "8000:5000"
+    environment:
+      - APP_ENV=${APP_ENV}
     volumes:
       - .:/code
       - logvolume01:/var/log
       - ./postgres_data/:/var/lib/postgresql/data/
     links:
+      - database
+    depends_on:
       - database
   redis:
     image: redis
@@ -30,10 +34,13 @@ services:
     command: -A app.celery_task worker -l INFO
     volumes:
       - ./:/app
+    environment:
+      - APP_ENV=${APP_ENV}
     links:
       - redis
     depends_on:
       - redis
+      - database
 volumes:
   logvolume01: {}
   postgres_data: {}
