@@ -32,7 +32,7 @@ class UploadAPI(Resource):
         if not file.filename:
             raise LookupError()
         filename = secure_filename(file.filename)
-        file_path = os.path.join(config.UPLOAD_FOLDER, filename)
+        file_path = os.path.join(config.as_dict()[config.CURRENT_ENV].UPLOAD_FOLDER, filename)
         file.save(file_path)
         # task_result = import_file_task.apply_async(args=[file_path], countdown=30)
         task_result = import_file_task.delay(file_path)
@@ -48,7 +48,7 @@ class TaskStatusAPI(Resource):
 
 class TaskStatusResultAPI(Resource):
     def get(self, task_id):
-        task = AsyncResult(task_id, backend=config.CELERY_RESULT_BACKEND)
+        task = AsyncResult(task_id, backend=config.as_dict()[config.CURRENT_ENV].CELERY_RESULT_BACKEND)
         if task.state in ["FAILURE", "PENDING"]:
             response = {
                 "task_id": task_id,

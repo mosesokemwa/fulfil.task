@@ -1,4 +1,4 @@
-version: "3.9"  # optional since v1.27.0
+version: "3.9" # optional since v1.27.0
 services:
   web:
     build: .
@@ -23,15 +23,16 @@ services:
     ports:
       - "5432:5432"
     environment:
-        POSTGRES_USER: yourUserDBName
-        POSTGRES_PASSWORD: yourUserDBPassword
-        POSTGRES_DB: yourDBName
+      POSTGRES_USER: yourUserDBName
+      POSTGRES_PASSWORD: yourUserDBPassword
+      POSTGRES_DB: yourDBName
   worker:
     build:
       context: .
     hostname: worker
-    entrypoint: celery
-    command: -A app.celery_task worker -l INFO
+    # entrypoint: celery
+    # command: -A app.celery_task worker -l INFO
+    command: ['celery', '-A', 'app.celery_task', 'worker', '-l', 'INFO']
     volumes:
       - ./:/app
     environment:
