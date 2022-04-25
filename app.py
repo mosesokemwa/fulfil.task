@@ -39,9 +39,13 @@ def create_app():
     # if not app.debug and not app.testing:
     # ... no changes to logging setup
 
+    # @app.route('/')
+    # def hello_world():
+    #    return 'Hello, World!'
+
     return app
 
 
-# if __name__ == "__main__":
-#    app = create_app()
-#    app.run(host='0.0.0.0', debug=True)
+if __name__ == "__main__":
+   app = create_app()
+   app.run(host='0.0.0.0', debug=True)

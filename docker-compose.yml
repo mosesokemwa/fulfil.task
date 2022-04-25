@@ -16,6 +16,13 @@ services:
       - database
   redis:
     image: redis
+  migration:
+    build: .
+    environment:
+      - APP_ENV=${APP_ENV}
+    command: flask db upgrade
+    depends_on:
+      - database
   database:
     image: 'postgres:latest'
     container_name: postgres_db_container

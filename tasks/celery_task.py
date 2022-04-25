@@ -31,7 +31,7 @@ def import_file_task(self, file_path):
             db_session.commit()
             return product.sku
 
-            # id duplicates are found update
+            ## id duplicates are found  update
             # try:
             #     db_session.add(product)
             #     db_session.commit()
