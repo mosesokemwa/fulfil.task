@@ -1,28 +1,7 @@
 version: "3.9" # optional since v1.27.0
 services:
-  web:
-    build: .
-    ports:
-      - "8000:5000"
-    environment:
-      - APP_ENV=${APP_ENV}
-    volumes:
-      - .:/code
-      - logvolume01:/var/log
-      - ./postgres_data/:/var/lib/postgresql/data/
-    links:
-      - database
-    depends_on:
-      - database
   redis:
-    image: redis
-  migration:
-    build: .
-    environment:
-      - APP_ENV=${APP_ENV}
-    command: flask db upgrade
-    depends_on:
-      - database
+      image: redis
   database:
     image: 'postgres:latest'
     container_name: postgres_db_container
@@ -33,22 +12,43 @@ services:
       POSTGRES_USER: yourUserDBName
       POSTGRES_PASSWORD: yourUserDBPassword
       POSTGRES_DB: yourDBName
+  migration:
+      build: .
+      environment:
+        - APP_ENV=${APP_ENV}
+      command: flask db upgrade
+      depends_on:
+        - database
   worker:
-    build:
-      context: .
+    build: .
     hostname: worker
     # entrypoint: celery
     # command: -A app.celery_task worker -l INFO
-    command: ['celery', '-A', 'app.celery_task', 'worker', '-l', 'INFO']
-    volumes:
-      - ./:/app
+    command: celery -A app.celery_task worker -l INFO
     environment:
       - APP_ENV=${APP_ENV}
-    links:
-      - redis
     depends_on:
       - redis
       - database
-volumes:
-  logvolume01: {}
-  postgres_data: {}
+      - migration
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    environment:
+      - APP_ENV=${APP_ENV}
+    links:
+      - database
+    depends_on:
+      - database
+      - redis
+      - migration
+  api-beat:
+   build: .
+   command: celery -A app.celery_task beat -l INFO
+   environment:
+     - APP_ENV=${APP_ENV}
+   depends_on:
+     - redis
+     - database
+     - migration
