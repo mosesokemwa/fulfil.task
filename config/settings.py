@@ -12,7 +12,8 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     CELERY_BROKER_URL = "redis://localhost:6379"
-    CELERY_RESULT_BACKEND = "redis://localhost:6379"
+    # CELERY_RESULT_BACKEND = "redis://localhost:6379"
+    CELERY_RESULT_BACKEND = "redis://"
     UPLOAD_FOLDER = os.path.join(basedir, "uploads")
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
 
