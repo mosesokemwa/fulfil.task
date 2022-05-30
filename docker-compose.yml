@@ -12,25 +12,15 @@ services:
       POSTGRES_USER: yourUserDBName
       POSTGRES_PASSWORD: yourUserDBPassword
       POSTGRES_DB: yourDBName
-  migration:
-      build: .
-      environment:
-        - APP_ENV=${APP_ENV}
-      command: flask db upgrade
-      depends_on:
-        - database
   worker:
     build: .
     hostname: worker
-    # entrypoint: celery
-    # command: -A app.celery_task worker -l INFO
     command: celery -A app.celery_task worker -l INFO
     environment:
       - APP_ENV=${APP_ENV}
     depends_on:
       - redis
       - database
-      - migration
   web:
     build: .
     ports:
@@ -42,13 +32,3 @@ services:
     depends_on:
       - database
       - redis
-      - migration
-  api-beat:
-   build: .
-   command: celery -A app.celery_task beat -l INFO
-   environment:
-     - APP_ENV=${APP_ENV}
-   depends_on:
-     - redis
-     - database
-     - migration
