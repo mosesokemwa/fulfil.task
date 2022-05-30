@@ -20,8 +20,7 @@ class UploaderAPI(Resource):
     def post(self):
         file = request.files["file"]
         # send in 30 seconds
-        # task_result = import_file_task.apply_async(args=[file], countdown=30)
-        task_result = import_file_task.delay(file)
+        task_result = import_file_task.apply_async(args=[file], countdown=30)
         return jsonify({"task_id": task_result.id}, 200)
 
 

@@ -1,5 +1,6 @@
 import csv
 import random
+import time
 
 from celery.utils.log import get_task_logger
 from models import db_session
@@ -15,7 +16,7 @@ def add(x, y):
     return x + y
 
 
-@celery.task(bind=True)
+@celery.task(bind=True, countdown=30)
 def import_file_task(self, file_path):
     index = 0
     status = ["active", "inactive"]
